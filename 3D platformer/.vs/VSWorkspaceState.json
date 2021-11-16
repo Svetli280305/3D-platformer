@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Assets"
+    "\\Assets",
+    "\\Assets\\Scenes"
   ],
-  "SelectedNode": "\\Assets\\Pickup.cs",
+  "SelectedNode": "\\Assets\\DeathBox.cs",
   "PreviewInSolutionExplorer": false
 }
