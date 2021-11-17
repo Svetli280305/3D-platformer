@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class DeathBox : MonoBehaviour
 {
@@ -9,7 +8,7 @@ public class DeathBox : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-           SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(1);
         }
     }
 }

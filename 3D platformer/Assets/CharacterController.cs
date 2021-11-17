@@ -20,6 +20,10 @@ public class CharacterController : MonoBehaviour
     public float normalSpeed = 8.0f;
     public float sprintSpeed = 15.0f;
 
+    float charger;
+    bool discharge = false;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -62,6 +66,35 @@ public class CharacterController : MonoBehaviour
         } else
         {
             maxSpeed = normalSpeed;
+        }
+
+        // If pressing Space, charge the variable charger using the Time it's being pressed.
+        if (Input.GetKey(KeyCode.Space))
+        {
+            charger += Time.deltaTime;
+        }
+
+        // On release, set the boolean 'discharge' to true.
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            discharge = true;
+        }
+    }
+
+
+    // Using fixed update since we are dealing with Unity's Physics
+    private void FixedUpdate()
+    {
+        // On (discharge == true)
+        if (discharge)
+        {
+            // Set jump force and give new velocity
+            jumpForce = 10 * charger;
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+
+            // Reset discharge and charger values
+            discharge = false;
+            charger = 0f;
         }
     }
 }

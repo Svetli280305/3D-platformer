@@ -14,4 +14,9 @@ public class DeathScreen : MonoBehaviour
     {
         Application.Quit();
     }
+
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.None;
+    }
 }
