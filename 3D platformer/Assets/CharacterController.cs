@@ -20,8 +20,9 @@ public class CharacterController : MonoBehaviour
     public float normalSpeed = 8.0f;
     public float sprintSpeed = 15.0f;
 
-    float charger;
-    bool discharge = false;
+    float jumpPressure = 0f;
+    float minJump = 2f;
+    float maxJumpPressure = 10f;
 
 
 
@@ -39,12 +40,12 @@ public class CharacterController : MonoBehaviour
         //transform.position = transform.position + transform.forward * Input.GetAxis("Vertical") * maxSpeed;
         //transform.position = transform.position + transform.right * Input.GetAxis("Horizontal") * maxSpeed;
 
-        isOnGround = Physics.CheckSphere(groundChecker.transform.position, 0.1f, groundLayer);
+        //isOnGround = Physics.CheckSphere(groundChecker.transform.position, 0.1f, groundLayer);
 
-        if (isOnGround == true && Input.GetKeyDown(KeyCode.Space))
-        {
-            myRigidbody.AddForce(transform.up * jumpForce);
-        }
+        //if (isOnGround == true && Input.GetKeyDown(KeyCode.Space))
+        //{
+            //myRigidbody.AddForce(transform.up * jumpForce);
+        //}
 
         Vector3 newVelocity = transform.forward * Input.GetAxis("Vertical") * maxSpeed;
         Vector3 newVelocity2 = transform.right * Input.GetAxis("Horizontal") * maxSpeed;
@@ -68,33 +69,39 @@ public class CharacterController : MonoBehaviour
             maxSpeed = normalSpeed;
         }
 
-        // If pressing Space, charge the variable charger using the Time it's being pressed.
-        if (Input.GetKey(KeyCode.Space))
+        if (isOnGround)
         {
-            charger += Time.deltaTime;
+            //holding jump button//
+            if (Input.GetButton("Jump"))
+            {
+                if (jumpPressure < maxJumpPressure)
+                {
+                    jumpPressure += Time.deltaTime*10f;
+                }
+                else
+                {
+                    jumpPressure = maxJumpPressure;
+                }
+            }
         }
-
-        // On release, set the boolean 'discharge' to true.
-        if (Input.GetKeyUp(KeyCode.Space))
+        //not holding jump button//
+        else
         {
-            discharge = true;
+            //jump//
+            if (jumpPressure > 0f)
+            {
+                jumpPressure = jumpPressure + minJump;
+                myRigidbody.velocity = new Vector3(jumpPressure / 10f, jumpPressure, ef);
+                jumpPressure = 0f;
+                isOnGround = false;
+            }
         }
     }
 
-
-    // Using fixed update since we are dealing with Unity's Physics
-    private void FixedUpdate()
+    void OnCollisionEnter(Collider other)
     {
-        // On (discharge == true)
-        if (discharge)
+        if (other.game0bject.CompareTag("Ground"))
         {
-            // Set jump force and give new velocity
-            jumpForce = 10 * charger;
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-
-            // Reset discharge and charger values
-            discharge = false;
-            charger = 0f;
+            isOnGround = true;
         }
     }
-}
